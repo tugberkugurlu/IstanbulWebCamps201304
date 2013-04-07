@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style type="text/css">
+        #list {
+            width: 300px;
+            padding: 0;
+        }
+
+            #list li {
+                list-style-type: none;
+                margin-top: 10px;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: gray;
+            }
+    </style>
+</head>
+<body>
+    <h2>Cars List</h2>
+    <ul id="list" data-bind="foreach: cars">
+        <li>
+            <span data-bind="text: Make"></span>, <span data-bind="text: Model"></span> (<span data-bind="text: Year"></span>) - <span data-bind="text: Price"></span>
+        </li>
+    </ul>
+
+    <button type="button" id="getCarsBtn">Get Cars</button>
+
+    <script src="/Scripts/jquery-1.9.1.js"></script>
+    <script src="Scripts/knockout-2.2.1.js"></script>
+    <script>
+        (function () {
+            var viewModel = {
+                cars: ko.observableArray()
+            };
+
+            $('#getCarsBtn').click(function (e) {
+
+                var $btn = $(this);
+
+                $.getJSON('/api/cars', function (cars) {
+                    $.each(cars, function (i, car) {
+                        viewModel.cars.push(car);
+                    });
+
+                    $btn.hide();
+                });
+
+                e.preventDefault();
+            });
+
+            ko.applyBindings(viewModel);
+        }());
+    </script>
+</body>
+</html>
